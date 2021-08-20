@@ -100,14 +100,14 @@ class Assembler {
             fw.close();  //Close Symbol Table file
 
             fw = new FileWriter("literal_table.txt");
-            fw.write("Literan_Name\tAddress\n");
+            fw.write("lName\tAddress\n");
             for(int i = 0; i < l_index; i++) {
                 fw.write(litTab[i].litName + "\t" + litTab[i].address + "\n");
             }
             fw.close();   //Close Literal Table file
 
             fw = new FileWriter("pool_table.txt");
-            fw.write("Pool_Index");
+            fw.write("Pool_Index\n");
             for(int i = 0; i < pindex; i++) {
                 fw.write(poolTab[i] + "\n");
             }
