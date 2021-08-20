@@ -1,3 +1,2 @@
-# SPOS-Assignments
-# SPOS-Assignments
-# Spos-Assignments
+### This repository contains SPOS assignments.
+
