@@ -1,4 +1,4 @@
-Symbol_Name	Address	Length
+Sym_Name	Addr	Length
 A1	107	4
 LOOP	102	0
 B1	111	1

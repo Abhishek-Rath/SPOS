@@ -93,7 +93,7 @@ class Assembler {
 
         void printTables() throws Exception {
             FileWriter fw = new FileWriter("symbol_table.txt");
-            fw.write("Symbol_Name\tAddress\tLength\n");
+            fw.write("Sym_Name\tAddr\tLength\n");
             for(int i = 0; i < sindex; i++) {
                 fw.write(symTab[i].symbolName + "\t" + symTab[i].address + "\t" + symTab[i].length + "\n");
             }
@@ -158,8 +158,8 @@ class Assembler {
                                 System.out.println("Invalid Instruction");
                                 fw.write("Error");
                             }
-                            System.out.println("AD " + val + " _ C" + loc);
-                            fw.write("AD " + val + "_ C" + loc + "\n");
+                            System.out.println("AD " + val + " - C " + loc);
+                            fw.write("AD " + val + " - C " + loc + "\n");
                         }
 
                         //If end statement is encountered 
@@ -234,7 +234,7 @@ class Assembler {
                     } 
                     else{
                         if(token[1].equals("DS") || token[1].equals("DC")){
-                            int len = Integer.parseInt(token[2]);
+                            int len = Integer.parseInt(token[2]); ///Get length of declaration stmt
                             k = search(token[0]);
     
                             if(k == -1){
@@ -266,7 +266,7 @@ class Assembler {
             printTables();
 
             System.out.println("-------------Symbol Table-------------");
-            System.out.println("sindex\tsname\taddress\tlength\n");
+            System.out.println("sindex\tsname\taddr\tlen\n");
             for(int i = 0; i < sindex; i++){
                 System.out.println(i+ "\t"  + symTab[i].symbolName + "\t" + symTab[i].address + "\t" + symTab[i].length + "\n");
             }
@@ -285,9 +285,76 @@ class Assembler {
 
         }
 
+
+        void passTwo() throws FileNotFoundException, Exception{
+            String stmt = ""; // to read statement
+            int t_index = 0;
+            int loc = 0; //Location counter
+            BufferedReader readFile = new BufferedReader(new FileReader("pass1output.txt"));
+
+            FileWriter fw = new FileWriter("pass2output.txt");
+            System.out.println("--------------------------- Machine Code --------------------------");
+
+            while((stmt = readFile.readLine()) != null) {
+                String token[] = stmt.split("[ ]+");
+                if(token.length == 5) {
+                    if(token[0].equals("AD")){
+                        //START STATEMENT
+                        loc = Integer.parseInt(token[4]);
+                        // System.out.println("***************************" + loc);
+                    }
+                    else if(token[0].equals("IS")){
+                        //for imperative statement
+                        if(token[3] == "L")  {
+                            //Literal
+                            System.out.println(loc + ") " + token[1] + " " + token[2] + " " + litTab[Integer.parseInt(token[4])].address);
+                            fw.write(loc + ") " + token[1] + " " + token[2] + " " + litTab[Integer.parseInt(token[4])].address + "\n");
+                        }
+                        else {
+                            //for symbol
+                            System.out.println(loc + ") " + token[1] + " " + token[2] + " " + symTab[Integer.parseInt(token[4])].address);
+                            fw.write(loc + ") " + token[1] + " " + token[2] + " " + symTab[Integer.parseInt(token[4])].address + "\n");
+                        }
+                        //After processing literal or symbol increment the LC
+                        loc++;
+                    }
+                    else {
+                        //Declarative Statement
+                        if(Integer.parseInt(token[1]) == 5){
+                            //DC stmt
+                            System.out.println(loc + ") " + 0 + " " + 0 + " " + token[4]);
+                            fw.write(loc + ") " + 0 + " " + 0 + " " + token[4] + "\n");
+                            loc += 1;
+                        }
+                        else {
+                            //DS STATEMENT
+                            System.out.println(loc + ") " + 0 + " " + 0 + " " + token[4]);
+                            fw.write(loc + ") " + 0 + " " + 0 + " " + token[4] + "\n");
+                            loc = loc + Integer.parseInt(token[4]);
+                        }
+                    }
+                }// end of if
+
+                else {
+                    if(token[1].equals("2")){
+                        //END STATEMENT
+                        loc += (l_index - poolTab[t_index]);
+                    }
+                    else {
+                        //LTORG STATEMENT
+                        loc = loc + (poolTab[t_index] + 1 - poolTab[t_index]);
+                        t_index++;
+                    }
+                }
+                
+            }
+            readFile.close();  //close pass1output file
+            fw.close(); //close pass2output.file
+        }
+
 }
 
-public class PassOne {
+public class TwoPassAssembler {
     
     public static void main(String[] args) throws FileNotFoundException, Exception {
         File f = new File("input.txt");
@@ -298,6 +365,10 @@ public class PassOne {
         System.out.println("Pass 1");
         System.out.println("----------------------------------");
         asm.passOne(br);
+        System.out.println("----------------------------------");
+        System.out.println("Pass 2");
+        asm.passTwo();
+        System.out.println("----------------------------------");
     }
 }
 

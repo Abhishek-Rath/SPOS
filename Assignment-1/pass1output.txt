@@ -1,4 +1,4 @@
-AD 1_ C100
+AD 1 - C 100
 IS 1 1 S 0
 IS 3 1 L 0
 IS 2 2 L 1
