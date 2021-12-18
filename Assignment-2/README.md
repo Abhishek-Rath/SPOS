@@ -1,1 +1,1 @@
-### This repository conatins SPOS lab assignments.
+### This repository contains SPOS lab assignments.
