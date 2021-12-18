@@ -1,3 +1,2 @@
 Index	Macro Name	MDT Index
-0	M1	&X	0
-1	M2	&P	6
+0	INCR	0
