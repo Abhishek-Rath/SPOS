@@ -71,6 +71,10 @@ class Macro {
         System.out.println("\n***********\tALA\t***********");
         System.out.println("FormalArgs");
         fw.write("FormalArgs\n");
+
+
+
+
         for(int i=0;i<alap;i++) {
             System.out.println(ala[i].formArg+"\t");
             fw.write(ala[i].formArg+"\n");
@@ -94,6 +98,8 @@ class Macro {
                 String instr = tok[0];
                         
                 //If there any formal arguments store them in ALA table
+
+
                 int start = alap;
                 for(int i=1;i<tok.length;i++) {
                     ala[alap] = new ALA(tok[i]);
@@ -107,6 +113,7 @@ class Macro {
                 mdtp++;
                 
                 while(!(macStr = br.readLine()).equals("MEND")) {
+
                     tok = macStr.split("\t");
                     instr = "";
                     for(int i=0; i<tok.length;i++) {
@@ -155,8 +162,9 @@ class Macro {
         String arr[];
         
         FileWriter fw = new FileWriter("mac2Output.txt");
+
         while((st = br.readLine()) != null) {
-            String token[] = st.trim().split("\t");
+            String token[] = st.trim().split("\t"); //pass1 op
             int j = searchMNT(token[0]);
             if(j != -1) {
                 int mdtp = mnt[j].MDTP;

@@ -3,13 +3,13 @@
 import java.util.Scanner;
 
 class Process {
-    int AT, WT, FT;
-    int BT;
-    int RBT;
-    int TAT;
-    int pr;
+    int AT, WT, FT;   // Arrival Time, Waiting Time, Finished Time
+    int BT;  // Burst Time
+    int RBT; // Remaining Burst time
+    int TAT; // Turn Around Time
+    int pr; // Priority
     int flag;
-    String pName;
+    String pName;  // Process Name
 
     Process(int ar, int burst) {
         AT = ar;
@@ -31,9 +31,9 @@ public class CPUScheduling {
     Process[] pro;
     int n;
 
-    int gIndex;
-    int GT[] = new int[100];
-    int GT_Time[] = new int[100];
+    int gIndex;   // Gant chart Index
+    int GT[] = new int[100];  // Gant for process
+    int GT_Time[] = new int[100];  // To indicate time
     Scanner s;
     float avg_wt = 0;
     float avg_tat = 0;
@@ -80,6 +80,8 @@ public class CPUScheduling {
         Process temp;
         gIndex = 0;
 
+        // Sort according to arrival time
+        // i.e The process which came first will get served first
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n - i - 1; j++) {
                 if (pro[j].AT > pro[j + 1].AT) {
@@ -89,7 +91,7 @@ public class CPUScheduling {
                 }
             }
         // Scheduling
-        int x = pro[0].AT;
+        int x = pro[0].AT;  // get arrival time for 1st process
         avg_wt = 0;
         avg_tat = 0;
 
@@ -97,7 +99,7 @@ public class CPUScheduling {
             GT_Time[gIndex] = x;
             GT[gIndex] = i;
             gIndex++;
-            x = x + pro[i].BT;
+            x = x + pro[i].BT;  // Arrival time + burst time = completion time
             pro[i].FT = x;
             pro[i].TAT = pro[i].FT - pro[i].AT;
             pro[i].WT = pro[i].TAT - pro[i].BT;
@@ -113,7 +115,7 @@ public class CPUScheduling {
     void SJF_P() {
         gIndex = 0;
 
-        int ct = 0;
+        int ct = 0;   // current time
         int min = 999;
         int ind = -1;
         int fg = 0;
@@ -124,7 +126,10 @@ public class CPUScheduling {
             min = 10000;
             ind = -1;
             for (int i = 0; i < n; i++) {
-                if (pro[i].AT < ct && pro[i].RBT != 0 && min > pro[i].RBT) {
+
+                // Find the process with minimum remianing time
+                // among the processes that arrives till current time
+                if (pro[i].AT <= ct && pro[i].RBT != 0 && min > pro[i].RBT) {
                     ind = i;
                     min = pro[i].RBT;
                     fg = 1;
@@ -134,7 +139,7 @@ public class CPUScheduling {
             if (fg == 1) {
                 pro[ind].RBT--;
                 // Gantt Chart
-                if (gIndex > 0) {
+                if (gIndex >= 0) {
                     if (GT[gIndex - 1] != ind) {
                         GT_Time[gIndex] = ct;
                         GT[gIndex] = ind;
@@ -146,6 +151,8 @@ public class CPUScheduling {
                     gIndex++;
                 }
                 ct++;
+
+                // If process gets completely executed
                 if (pro[ind].RBT == 0) {
                     total_completed_process++;
                     pro[ind].FT = ct;

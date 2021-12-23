@@ -97,10 +97,15 @@ class Assembler {
         void printTables() throws Exception {
             FileWriter fw = new FileWriter("symbol_table.txt");
             fw.write("Sym_Name\tAddr\tLength\n");
+
+
             for(int i = 0; i < sindex; i++) {
                 fw.write(symTab[i].symbolName + "\t" + symTab[i].address + "\t" + symTab[i].length + "\n");
             }
+
+
             fw.close();  //Close Symbol Table file
+
 
             fw = new FileWriter("literal_table.txt");
             fw.write("lName\tAddress\n");
@@ -108,6 +113,7 @@ class Assembler {
                 fw.write(litTab[i].litName + "\t" + litTab[i].address + "\n");
             }
             fw.close();   //Close Literal Table file
+
 
             fw = new FileWriter("pool_table.txt");
             fw.write("Pool_Index\n");
@@ -123,6 +129,8 @@ class Assembler {
             int k;
 
             FileWriter fw = new FileWriter("pass1output.txt");
+
+
             while((stmt = br.readLine()) != null) {
                 String token[] = stmt.split("[ \t]+");  //Split the statement using spaces
                 
@@ -190,6 +198,12 @@ class Assembler {
                         }
                     }
 
+
+
+
+
+
+
                     //Check if token is present in Mnemonic Op Code table
                     else if(MOT.containsKey(token[0])) {
                         int val = MOT.get(token[0]);
@@ -215,6 +229,8 @@ class Assembler {
                             k = l_index; 
                             l_index++;  //increment l_index to point to next empty location
                         }
+
+
                         else {
                             ch = 'S'; //character is symbol
                             k = search(token[2]);  
@@ -253,6 +269,8 @@ class Assembler {
                                symTab[k].address = loc;
                                 loc += len;
                             }
+
+
                             else{
                                 int val = POT.get(token[1]);
                                 System.out.println("DL " + val + " - C " + token[2]);
@@ -306,6 +324,8 @@ class Assembler {
                         loc = Integer.parseInt(token[4]);
                         // System.out.println("***************************" + loc);
                     }
+
+
                     else if(token[0].equals("IS")){
                         //for imperative statement
                         if(token[3] == "L")  {
@@ -321,6 +341,7 @@ class Assembler {
                         //After processing literal or symbol increment the LC
                         loc++;
                     }
+                    
                     else {
                         //Declarative Statement
                         if(Integer.parseInt(token[1]) == 5){
